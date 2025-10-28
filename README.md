@@ -1,3 +1,11 @@
+# Movies App build using react 19
+
+### Application Screenshot
+
+This is a quick look at the main screen of the application.
+
+![App Screenshot of the Main Dashboard] (public/appscreenshot.png)
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
