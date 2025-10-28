@@ -1,10 +1,17 @@
-# Movies App build using react 19
+# Movies App - Debounced Search, Trending, Favorites(React + Appwrite)
 
 ### Application Screenshot
 
 This is a quick look at the main screen of the application.
 
 ![App Screenshot of the Main Dashboard](public/appscreenshot.png)
+
+# Features
+
+• Debounced Search to reduce API calls - useDebounced + useEffects.
+• Trending saved searches
+
+## Why Debouncing + caching matters for product UX and cost
 
 # React + Vite
 
