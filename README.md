@@ -6,12 +6,74 @@ This is a quick look at the main screen of the application.
 
 ![App Screenshot of the Main Dashboard](public/appscreenshot.png)
 
+## Project Structure
+
+```
+movies-TMDB/
+├── Movies-TMDB-Backend/          # Express.js Backend API
+│   ├── src/
+│   │   ├── Config/
+│   │   │   ├── arcjet.ts         # Security configuration
+│   │   │   ├── database.ts       # MongoDB connection
+│   │   │   └── logger.ts         # Winston logger setup
+│   │   ├── Controllers/          # Route controllers
+│   │   ├── Middleware/
+│   │   │   └── security.middleware.ts  # Arcjet security middleware
+│   │   ├── Routes/               # API routes
+│   │   ├── Schemas/              # Mongoose schemas
+│   │   ├── Utils/
+│   │   │   └── Types/
+│   │   │       ├── express.d.ts  # Express type definitions
+│   │   │       └── UserRequest.ts # Custom request types
+│   │   ├── app.ts                # Express app configuration
+│   │   ├── index.ts              # Application entry point
+│   │   └── server.ts             # Server initialization
+│   ├── dist/                     # Compiled JavaScript (generated)
+│   ├── logs/                     # Application logs (generated)
+│   ├── .env                      # Environment variables
+│   ├── .dockerignore             # Docker ignore file
+│   ├── Dockerfile                # Docker configuration for backend
+│   ├── package.json              # Backend dependencies
+│   └── tsconfig.json             # TypeScript configuration
+│
+├── src/                          # React Frontend
+│   ├── components/
+│   │   ├── MovieCard.jsx         # Movie card component
+│   │   ├── Search.jsx            # Search component
+│   │   └── Spinner.jsx           # Loading spinner
+│   ├── App.jsx                   # Main app component
+│   ├── App.css                   # App styles
+│   ├── appwrite.js               # Appwrite configuration
+│   ├── index.css                 # Global styles
+│   └── main.jsx                  # React entry point
+│
+├── public/                       # Static assets
+│   ├── appscreenshot.png
+│   ├── hero-bg.png
+│   ├── hero-img.png
+│   ├── logo.svg
+│   ├── search.svg
+│   └── star.svg
+│
+├── .env.example                  # Example environment variables
+├── .gitignore                    # Git ignore file
+├── eslint.config.js              # ESLint configuration
+├── index.html                    # HTML entry point
+├── package.json                  # Frontend dependencies
+├── vite.config.js                # Vite configuration
+└── README.md                     # Project documentation
+```
+
 # Frontend
 
 ## Features
 
 • Debounced Search to reduce API calls - useDebounced + useEffects.
 • Trending saved searches
+• React 19 with modern hooks
+• Vite for fast development and building
+• TailwindCSS for styling
+• Appwrite integration
 
 ## Why Debouncing + caching matters for product UX and cost
 
@@ -27,36 +89,6 @@ A secure Express.js backend API for a movies application, built with TypeScript 
 - 🚀 **TypeScript**: Full TypeScript support with ES modules
 - ⚡ **Hot Reload**: Development mode with nodemon
 
-## File Structure
-
-```
-Movies-TMDB-Backend/
-├── src/
-│   ├── Config/
-│   │   ├── arcjet.ts          # Arcjet security configuration
-│   │   └── logger.ts          # Winston logger setup
-│   ├── Controllers/           # Route controllers (empty)
-│   ├── Middleware/
-│   │   └── security.middlware.ts  # Arcjet security middleware
-│   ├── Routes/                # API routes (empty)
-│   ├── Utils/
-│   │   └── Types/
-│   │       ├── express.d.ts   # Express type definitions
-│   │       └── UserRequest.ts # Custom request types
-│   ├── Components/            # Reusable components (empty)
-│   ├── app.ts                 # Express app configuration
-│   ├── index.ts               # Application entry point
-│   └── server.ts              # Server initialization
-├── dist/                      # Compiled JavaScript (generated)
-├── logs/                      # Application logs (generated)
-│   ├── error.log
-│   └── combined.log
-├── node_modules/              # Dependencies
-├── .env                       # Environment variables
-├── package.json               # Project dependencies and scripts
-├── package-lock.json          # Locked dependency versions
-└── tsconfig.json              # TypeScript configuration
-```
 
 ## Prerequisites
 
@@ -79,15 +111,41 @@ Movies-TMDB-Backend/
 
 3. **Set up environment variables**
 
-   Create a `.env` file in the root directory:
+   Create a `.env` file in the backend root directory:
 
    ```env
    PORT=4000
    NODE_ENV=development
    LOG_LEVEL=info
 
-   # Arcjet key - Get yours at https://app.arcjet.com
+   # MongoDB Connection
+   MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/movies_app?appName=Cluster0
+   # Or for local MongoDB:
+   # MONGO_URI=mongodb://localhost:27017/movies_app
+
+   # Arcjet Security
    ARCJET_KEY=your_arcjet_key_here
+
+   # API Keys
+   GEMINI_API_KEY=your_gemini_api_key
+   LANGSMITH_API_KEY=your_langsmith_api_key
+   LANGSMITH_TRACING_ENABLED=true
+   LANGSMITH_TRACING_SAMPLE_RATE=1.0
+
+   # Authentication
+   JWT_ACCESS_SECRET=your_access_secret
+   JWT_REFRESH_SECRET=your_refresh_secret
+   DEVICE_JWT_SECRET=your_device_secret
+   ACCESS_TTL=15m
+   REFRESH_TTL=30d
+   DEVICE_TTL=90d
+
+   # Redis
+   REDIS_URL=redis://localhost:6379
+
+   # GitHub OAuth
+   GITHUB_CLIENT_SECRET=your_github_secret
+   GITHUB_CLIENT_ID=your_github_client_id
    ```
 
 4. **Create logs directory** (if not exists)
@@ -251,13 +309,82 @@ PORT=5000
 - **nodemon**: Hot reload development
 - **@types/\***: TypeScript type definitions
 
+## Docker Deployment
+
+### Backend Docker Setup
+
+The backend includes a multi-stage Dockerfile for both development and production environments.
+
+#### Building the Docker Image
+
+```bash
+cd Movies-TMDB-Backend
+docker build -t movies-app .
+```
+
+#### Running with Docker
+
+**Option 1: Using environment file (Recommended)**
+```bash
+docker run -p 4000:4000 --env-file .env movies-app
+```
+
+**Option 2: Passing environment variables directly**
+```bash
+docker run -p 4000:4000 \
+  -e MONGO_URI="mongodb+srv://username:password@cluster.mongodb.net/movies_app" \
+  -e ARCJET_KEY="your_arcjet_key" \
+  -e NODE_ENV="production" \
+  movies-app
+```
+
+**Option 3: Running in development mode**
+```bash
+docker build --target development -t movies-app-dev .
+docker run -p 4000:4000 --env-file .env -v $(pwd)/src:/app/src movies-app-dev
+```
+
+#### Docker Stages
+
+The Dockerfile includes three stages:
+
+1. **base**: Base configuration with production dependencies
+2. **development**: Includes dev dependencies and hot reload with nodemon
+3. **production**: Optimized production build with compiled TypeScript
+
+#### Important Notes
+
+- The `.env` file is **not** copied into the Docker image for security reasons
+- Always use `--env-file` or `-e` flags to pass environment variables
+- The MongoDB connection string must start with `mongodb://` or `mongodb+srv://`
+- Port 4000 is exposed by default (configurable via PORT environment variable)
+
+### Docker Troubleshooting
+
+**Issue**: Database connection failed
+```
+error: Database connection failed: Invalid scheme, expected connection string to start with "mongodb://" or "mongodb+srv://"
+```
+**Solution**: Make sure to pass environment variables using `--env-file .env` flag
+
+**Issue**: dotenv injecting env (0) from .env
+**Solution**: The `.env` file inside the container is not being read. Use `--env-file` to load variables from host.
+
 ## Development Workflow
+
+### Local Development (Without Docker)
 
 1. Make changes to TypeScript files in `src/`
 2. Run `npm run dev` for hot reload during development
 3. Test your changes
 4. Run `npm run build` to compile
 5. Run `npm start` to test production build
+
+### Docker Development
+
+1. Build development image: `docker build --target development -t movies-app-dev .`
+2. Run with volume mount for hot reload: `docker run -p 4000:4000 --env-file .env -v $(pwd)/src:/app/src movies-app-dev`
+3. Make changes and they'll be reflected automatically
 
 ## License
 
