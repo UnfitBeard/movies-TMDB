@@ -1,0 +1,43 @@
+{
+  "name": "movies-tmdb-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "nodemon --watch src --ext ts,js,json --exec \"node --import 'data:text/javascript,import { register } from \\\"node:module\\\"; import { pathToFileURL } from \\\"node:url\\\"; register(\\\"ts-node/esm\\\", pathToFileURL(\\\"./\\\"));' src/index.ts\"",
+    "build": "tsc"
+  },
+  "imports": {
+    "#Config/*": "./src/Config/*",
+    "#Controllers/*": "./src/Controllers/*",
+    "#Middlewares/*": "./src/Middlewares/*",
+    "#Routes/*": "./src/Routes/*",
+    "#Services/*": "./src/Services/*",
+    "#Utils/*": "./src/Utils/*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@arcjet/node": "^1.0.0-beta.13",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^24.9.2",
+    "arcjet": "^1.0.0-beta.13",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "morgan": "^1.10.1",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "tslib": "^2.8.1",
+    "typescript": "^5.9.3",
+    "winston": "^3.18.3"
+  },
+  "type": "module"
+}
