@@ -1,6 +1,6 @@
 import aj from "../Config/arcjet.js";
-import type { AllRequest } from "../Utils/Types/express.d.js";
-import type { userRequest } from "../Utils/Types/UserRequest.js";
+import type { AllRequest } from "../Utils/Types/express.d.ts";
+import type { userRequest } from "../Utils/Types/UserRequest";
 import { slidingWindow } from "arcjet";
 import type { NextFunction, Response } from "express";
 import logger from "../Config/logger.js";

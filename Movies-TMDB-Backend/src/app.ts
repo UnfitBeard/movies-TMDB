@@ -8,6 +8,8 @@ import cookieParser from "cookie-parser";
 import { securityMiddleware } from "./Middleware/security.middlware.js";
 import logger from "./Config/logger.js";
 
+dotenv.config();
+
 const app = express();
 
 app.use(cors());
